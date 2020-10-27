@@ -9,6 +9,10 @@ csv_file = "student-mat.csv"
 df_from_csv = pd.read_csv(csv_file, delimiter=';')
 
 def create_table(df_dataset, table_name):
+    '''
+    The function returns SQL statement "CREATE TABLE" with needed table name
+    and its column names along with data types which these columns will store.
+    '''
     cols_with_sql_types = []
     for col_name, col_type in df_dataset.dtypes.iteritems():
         if col_type == "object":
@@ -20,6 +24,9 @@ def create_table(df_dataset, table_name):
     return f'CREATE TABLE "{table_name}" ({final})'
 
 def drop_table_if_exists(table_name):
+    '''
+    The function returns SQL statement "DROP TABLE IF EXISTS" with needed table name.
+    '''
     return f'DROP TABLE IF EXISTS {table_name}'
 
 conn = sqlite3.connect('students.sqlite')
@@ -28,6 +35,9 @@ cur.execute(f"{drop_table_if_exists('students')}")
 cur.execute(f"{create_table(df_from_csv, 'students')}")
 
 def insert_into_values(df_dataset, table_name):
+    '''
+    The function returns SQL statement "INSERT INTO" with needed table name and values.
+    '''
     numb_of_columns = len(df_dataset.columns)
     values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
     return f'INSERT INTO "{table_name}" VALUES ({values})'
