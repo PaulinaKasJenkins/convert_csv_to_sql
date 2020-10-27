@@ -24,6 +24,7 @@ def create_table(df_dataset, table_name):
     return f'CREATE TABLE "{table_name}" ({final})'
 
 def drop_table_if_exists(table_name):
+    table_name = str(table_name)
     '''
     The function returns SQL statement "DROP TABLE IF EXISTS" with needed table name.
     '''
