@@ -8,6 +8,8 @@ csv_file = "student-mat.csv"
 
 df_from_csv = pd.read_csv(csv_file, delimiter=';')
 
+table_name = input("Please enter the table name: ")
+
 def create_table(df_dataset, table_name):
     '''
     The function returns SQL statement "CREATE TABLE" with needed table name
