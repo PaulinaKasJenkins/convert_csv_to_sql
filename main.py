@@ -11,18 +11,21 @@ df_from_csv = pd.read_csv(csv_file, delimiter=';')
 def generate_random_table_name():
     table_name = ""
     for i in range(30):
-        table_name.append(random.choice(string.ascii_lowercase))
+        table_name += random.choice(string.ascii_lowercase)
     return table_name
 
 
 def get_result_of_input():
-    try:
-        reply = input("Please enter a table name (string that doesn't start with '_sqlite' nor a digit): ")
-    except sqlite3.OperationalError:
+    reply = input("Please enter a table name (string that doesn't start with '_sqlite' nor a digit): ")
+    first_char = int(reply[0])
+    if isinstance(first_char, int):
         reply = input("""Please enter a table name (string that doesn't start with
-         '_sqlite' nor a digit). You have last chance, otherwise the table will be named randomly. """)
-        reply = generate_random_table_name()
+        '_sqlite' nor a digit). You have last chance, otherwise the table will be named randomly. Please type: """)
+        first_char = int(reply[0])
+        if isinstance(first_char, int):
+            reply = generate_random_table_name()
     return reply
+
 
 def get_proper_table_name(table_name):
     '''
@@ -37,6 +40,8 @@ def get_proper_table_name(table_name):
         raise Exception("The table name cannot start with a digit. Please change.")
     elif not isinstance(table_name, str):
         table_name = str(table_name)
+    else:
+        return table_name
 
     return table_name
 
@@ -65,8 +70,9 @@ def drop_table_if_exists(table_name):
 
 conn = sqlite3.connect('students.sqlite')
 cur = conn.cursor()
-cur.execute(f"{drop_table_if_exists(get_proper_table_name(get_result_of_input()))}")
-cur.execute(f"{create_table(df_from_csv, get_proper_table_name(get_result_of_input()))}")
+table_name = get_proper_table_name(get_result_of_input())
+cur.execute(f"{drop_table_if_exists(table_name)}")
+cur.execute(f"{create_table(df_from_csv, table_name)}")
 
 def insert_into_values(df_dataset, table_name):
     '''
@@ -76,21 +82,21 @@ def insert_into_values(df_dataset, table_name):
     values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
     return f'INSERT INTO "{table_name}" VALUES ({values})'
 
-with open(csv_file) as csv_file_with_open:
-    csv_reader = csv.reader(csv_file_with_open, delimiter=';')
-    columns_number = [i for i in range(len(df_from_csv.columns))]
-    variables = [f'variable{i}' for i in columns_number]
+    with open(csv_file) as csv_file_with_open:
+        csv_reader = csv.reader(csv_file_with_open, delimiter=';')
+        columns_number = [i for i in range(len(df_from_csv.columns))]
+        variables = [f'variable{i}' for i in columns_number]
 
-    next(csv_reader) # to skip header
-    for row in csv_reader:
-        dic = dict(zip(variables, row))
+        next(csv_reader) # to skip header
+        for row in csv_reader:
+            dic = dict(zip(variables, row))
 
-        tup = ()
-        lis = list(tup)
-        for i in variables:
-            lis.append(dic[i])
+            tup = ()
+            lis = list(tup)
+            for i in variables:
+                lis.append(dic[i])
 
 
-        cur.execute(f"{insert_into_values(df_from_csv, table_name)}",
-        tuple(lis))
-        conn.commit()
+            cur.execute(f"{insert_into_values(df_from_csv, table_name)}",
+            tuple(lis))
+            conn.commit()
