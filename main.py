@@ -8,12 +8,39 @@ csv_file = "student-mat.csv"
 df_from_csv = pd.read_csv(csv_file, delimiter=';')
 
 
+def convert_input_str_to_int(input_int):
+    limit = input_int
+    output_int = []
+    i=1
+    input_int = abs(input_int)
+    while i < abs(limit):
+        output_int.append(input_int % 10)
+        input_int = input_int // 10
+        i*=10
+
+    output_int.reverse()
+
+    if limit < 0:
+        output_int[0] = -output_int[0]
+
+    output_str = ''
+    for i in output_int:
+        if i < 0:
+            output_str += chr(ord('0')+abs(i))
+        else:
+            output_str += chr(ord('0')+i)
+
+    if limit < 0:
+        output_str = '-' + output_str
+
+    return output_str
+
 
 def get_result_of_input():
     reply = input("Please enter a table name (string that doesn't start with '_sqlite' nor a digit): ")
-    if isinstance(reply, int):
-        reply = str(reply)
-    elif isinstance(reply[0], int):
+    reply[0] = convert_input_str_to_int(reply[0])
+
+    if isinstance(reply[0], int):
         reply = input("Please enter a table name (string that doesn't start with a digit): ")
     elif reply.startswith('_sqlite'):
         reply = input("Please enter a table name (string that doesn't start with '_sqlite'): ")
@@ -60,8 +87,8 @@ def drop_table_if_exists(table_name):
 
 conn = sqlite3.connect('students.sqlite')
 cur = conn.cursor()
-cur.execute(f"{drop_table_if_exists(get_proper_table_name(table_name))}")
-cur.execute(f"{create_table(df_from_csv, get_proper_table_name(table_name))}")
+cur.execute(f"{drop_table_if_exists(get_proper_table_name(get_result_of_input()))}")
+cur.execute(f"{create_table(df_from_csv, get_proper_table_name(get_result_of_input()))}")
 
 def insert_into_values(df_dataset, table_name):
     '''
