@@ -6,7 +6,18 @@ import pandas as pd # to load column names and their data types
 
 csv_file = "student-mat.csv"
 df_from_csv = pd.read_csv(csv_file, delimiter=';')
-table_name = input("Please enter the table name (string that doesn't start with '_sqlite'): ")
+
+
+
+def get_result_of_input():
+    reply = input("Please enter a table name (string that doesn't start with '_sqlite' nor a digit): ")
+    if isinstance(reply, int):
+        reply = str(reply)
+    elif isinstance(reply[0], int):
+        reply = input("Please enter a table name (string that doesn't start with a digit): ")
+    elif reply.startswith('_sqlite'):
+        reply = input("Please enter a table name (string that doesn't start with '_sqlite'): ")
+    return reply
 
 def get_proper_table_name(table_name):
     '''
