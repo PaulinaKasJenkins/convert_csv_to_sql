@@ -29,7 +29,7 @@ def drop_table_if_exists(table_name):
     '''
     The function returns SQL statement "DROP TABLE IF EXISTS" with needed table name.
     According to sqlite documentation (https://www.sqlite.org/lang_createtable.html),
-    every name for table is allowed, in spite of names starting with "slite_".
+    every string name for table is allowed, in spite of names starting with "slite_".
     '''
     if table_name == None:
         raise Exception("The table name cannot be None object. Please change.")
@@ -42,8 +42,8 @@ def drop_table_if_exists(table_name):
 
 conn = sqlite3.connect('students.sqlite')
 cur = conn.cursor()
-cur.execute(f"{drop_table_if_exists('students')}")
-cur.execute(f"{create_table(df_from_csv, 'students')}")
+cur.execute(f"{drop_table_if_exists(table_name)}")
+cur.execute(f"{create_table(df_from_csv, table_name)}")
 
 def insert_into_values(df_dataset, table_name):
     '''
@@ -68,6 +68,6 @@ with open(csv_file) as csv_file_with_open:
             lis.append(dic[i])
 
 
-        cur.execute(f"{insert_into_values(df_from_csv, 'students')}",
+        cur.execute(f"{insert_into_values(df_from_csv, table_name)}",
         tuple(lis))
         conn.commit()
