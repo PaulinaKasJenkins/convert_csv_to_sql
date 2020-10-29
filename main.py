@@ -5,10 +5,25 @@ import re
 import pandas as pd # to load column names and their data types
 
 csv_file = "student-mat.csv"
-
 df_from_csv = pd.read_csv(csv_file, delimiter=';')
+table_name = input("Please enter the table name (string that doesn't start with '_sqlite'): ")
 
-table_name = input("Please enter the table name: ")
+def get_proper_table_name(table_name):
+    '''
+    According to sqlite documentation (https://www.sqlite.org/lang_createtable.html),
+    every string name for table is allowed, in spite of names starting with "slite_".
+    '''
+    if table_name == None or '':
+        raise Exception("The table name cannot be None object or blank. Please change.")
+    elif table_name == 'sqlite_':
+        raise Exception("The table name cannot starts with 'sqlite_'. Please change.")
+    elif isinstance(table_name[0], int):
+        raise Exception("The table name cannot start with a digit. Please change.")
+    elif not isinstance(table_name, str):
+        table_name = str(table_name)
+
+    return table_name
+
 
 def create_table(df_dataset, table_name):
     '''
@@ -28,22 +43,14 @@ def create_table(df_dataset, table_name):
 def drop_table_if_exists(table_name):
     '''
     The function returns SQL statement "DROP TABLE IF EXISTS" with needed table name.
-    According to sqlite documentation (https://www.sqlite.org/lang_createtable.html),
-    every string name for table is allowed, in spite of names starting with "slite_".
     '''
-    if table_name == None:
-        raise Exception("The table name cannot be None object. Please change.")
-    elif table_name == 'sqlite_':
-        raise Exception("The table name cannot starts with 'sqlite_'. Please change.")
-    elif isinstance(table_name, str):
-        table_name = str(table_name)
 
     return f'DROP TABLE IF EXISTS {table_name}'
 
 conn = sqlite3.connect('students.sqlite')
 cur = conn.cursor()
-cur.execute(f"{drop_table_if_exists(table_name)}")
-cur.execute(f"{create_table(df_from_csv, table_name)}")
+cur.execute(f"{drop_table_if_exists(get_proper_table_name(table_name))}")
+cur.execute(f"{create_table(df_from_csv, get_proper_table_name(table_name))}")
 
 def insert_into_values(df_dataset, table_name):
     '''
