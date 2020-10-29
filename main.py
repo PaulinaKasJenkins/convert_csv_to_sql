@@ -3,47 +3,25 @@ import csv
 import re
 
 import pandas as pd # to load column names and their data types
+import random, string # to generate random table name if necessary
 
 csv_file = "student-mat.csv"
 df_from_csv = pd.read_csv(csv_file, delimiter=';')
 
-
-def convert_input_str_to_int(input_int):
-    limit = input_int
-    output_int = []
-    i=1
-    input_int = abs(input_int)
-    while i < abs(limit):
-        output_int.append(input_int % 10)
-        input_int = input_int // 10
-        i*=10
-
-    output_int.reverse()
-
-    if limit < 0:
-        output_int[0] = -output_int[0]
-
-    output_str = ''
-    for i in output_int:
-        if i < 0:
-            output_str += chr(ord('0')+abs(i))
-        else:
-            output_str += chr(ord('0')+i)
-
-    if limit < 0:
-        output_str = '-' + output_str
-
-    return output_str
+def generate_random_table_name():
+    table_name = ""
+    for i in range(30):
+        table_name.append(random.choice(string.ascii_lowercase))
+    return table_name
 
 
 def get_result_of_input():
-    reply = input("Please enter a table name (string that doesn't start with '_sqlite' nor a digit): ")
-    reply[0] = convert_input_str_to_int(reply[0])
-
-    if isinstance(reply[0], int):
-        reply = input("Please enter a table name (string that doesn't start with a digit): ")
-    elif reply.startswith('_sqlite'):
-        reply = input("Please enter a table name (string that doesn't start with '_sqlite'): ")
+    try:
+        reply = input("Please enter a table name (string that doesn't start with '_sqlite' nor a digit): ")
+    except sqlite3.OperationalError:
+        reply = input("""Please enter a table name (string that doesn't start with
+         '_sqlite' nor a digit). You have last chance, otherwise the table will be named randomly. """)
+        reply = generate_random_table_name()
     return reply
 
 def get_proper_table_name(table_name):
