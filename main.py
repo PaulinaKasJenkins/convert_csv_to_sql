@@ -24,10 +24,18 @@ def create_table(df_dataset, table_name):
     return f'CREATE TABLE "{table_name}" ({final})'
 
 def drop_table_if_exists(table_name):
-    table_name = str(table_name)
     '''
     The function returns SQL statement "DROP TABLE IF EXISTS" with needed table name.
+    According to sqlite documentation (https://www.sqlite.org/lang_createtable.html),
+    every name for table is allowed, in spite of names starting with "slite_".
     '''
+    if table_name == None:
+        raise Exception("The table name cannot be None object. Please change.")
+    elif table_name == 'sqlite_':
+        raise Exception("The table name cannot starts with 'sqlite_'. Please change.")
+    elif isinstance(table_name, str):
+        table_name = str(table_name)
+
     return f'DROP TABLE IF EXISTS {table_name}'
 
 conn = sqlite3.connect('students.sqlite')
