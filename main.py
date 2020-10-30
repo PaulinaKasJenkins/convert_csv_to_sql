@@ -34,10 +34,12 @@ def create_table(df_dataset, table_name):
     '''
     cols_with_sql_types = []
     for col_name, col_type in df_dataset.dtypes.iteritems():
-        if col_type == "object":
-            cols_with_sql_types.append('"' + col_name + '"' + " " + 'TEXT')
-        elif col_type == "int64":
+        if col_type in ["int64", "bool"]:
             cols_with_sql_types.append('"' + col_name + '"' + " " + 'INTEGER')
+        elif col_type == "float64":
+            cols_with_sql_types.append('"' + col_name + '"' + " " + 'REAL')
+        else:
+            cols_with_sql_types.append('"' + col_name + '"' + " " + 'TEXT')
 
     final = str(cols_with_sql_types).replace("'", "").replace(']', '').replace('[', '')
     return f'CREATE TABLE "{table_name}" ({final})'
