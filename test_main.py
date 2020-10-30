@@ -1,6 +1,7 @@
 import pytest
 import inspect
 import pandas as pd
+import numpy as np
 
 from main import *
 
@@ -45,20 +46,27 @@ class Test_create_table:
     '''
 
     # example dataset with dtypes that we want to test
-    df_dataset = pd.DateFrame(
-            data={'object': 'foo',
-                  'int64': 1,
-                  'float64': 0.5,
-                  'bool': True,
-                  'datetime64': pd.Timestamp('20180310'),
-                  'timedelta[ns]': pd.Timedelta('1 days 06:05:01.000030'),
-                  'category': 'B'},
-            columns=['dtype name', 'dtype value'],
-            dtype=['object', 'int64', 'float64', 'bool', 'datetime64', 'timedelta[ns]', 'category'],
+    df_dataset = pd.DataFrame(
+            data={'object': np.array(['foo'], dtype=object),
+                  'int64': np.array([1], dtype=int),
+                  'float64': np.array([0.5], dtype=float),
+                  'bool': np.array([True], dtype=bool),
+                  'datetime64': np.array([pd.Timestamp('20180310')], dtype=np.datetime64),
+                  'timedelta[ns]': np.array([pd.Timedelta('1 days 06:05:01.000030')], dtype=np.timedelta64),
+                  },
+            index=[0],
             )
+
+    # column for categorical dtype has been created here because
+    # numpy do not recognize 'category' type
+    df_dataset['category'] = 'B'
+    df_dataset['category'].astype('category')
 
     def test_if_object_is_correctly_assigned_to_sqlite_dtypes(self):
         table_name = 'whatever'
+        column_names = df_dataset.columns()
+        final = '"object" TEXT, "int64" INTEGER, "float64" REAL, ...'
+
         assert create_table(df_dataset, table_name) == f'CREATE TABLE "{table_name}" ({final})'
 
     def test_if_int64_is_correctly_assigned_to_sqlite_dtypes(self):
