@@ -14,9 +14,15 @@ def get_table_name():
     Create a table name from CSV file name and convert it to be table name
     allowed by slite3 documentation.
     '''
-    regex = re.compile('[^a-zA-Z]')
-    table_name = csv_file.split(".")[0]
-    table_name = regex.sub('', table_name)
+    if csv_file.startswith('sqlite_'):
+        table_name = ""
+        for i in range(10):
+            table_name += random.choice(string.ascii_lowercase)
+    else:
+        regex = re.compile('[^a-zA-Z]')
+        table_name = csv_file.split(".")[0]
+        table_name = regex.sub('', table_name)
+
     return table_name
 
 def create_table(df_dataset, table_name):
