@@ -19,7 +19,7 @@ def get_table_name():
         for i in range(10):
             table_name += random.choice(string.ascii_lowercase)
     else:
-        regex = re.compile('[^a-zA-Z]')
+        regex = re.compile('[^a-z]')
         table_name = csv_file.split(".")[0]
         table_name = regex.sub('', table_name)
 
