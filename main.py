@@ -15,7 +15,7 @@ def get_table_name():
     allowed by slite3 documentation.
     '''
     regex = re.compile('[^a-zA-Z]')
-    table_name = "student-mat.csv".split(".")[0]
+    table_name = csv_file.split(".")[0]
     table_name = regex.sub('', table_name)
     return table_name
 
