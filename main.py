@@ -9,7 +9,7 @@ csv_file = "students.csv"
 df_from_csv = pd.read_csv(csv_file, delimiter=';')
 
 
-def get_table_name():
+def get_table_name(csv_file):
     '''
     Create a table name from CSV file name and convert it to be table name
     allowed by slite3 documentation.
@@ -25,7 +25,7 @@ def get_table_name():
             table_name += random.choice(string.ascii_lowercase)
     return table_name
 
-generated_table_name = get_table_name()
+generated_table_name = get_table_name(csv_file)
 
 def create_table(df_dataset, table_name):
     '''
