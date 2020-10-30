@@ -1,5 +1,6 @@
 import pytest
 import inspect
+import pandas as pd
 
 from main import *
 
@@ -43,8 +44,22 @@ class Test_create_table:
      - category
     '''
 
+    # example dataset with dtypes that we want to test
+    df_dataset = pd.DateFrame(
+            data={'object': 'foo',
+                  'int64': 1,
+                  'float64': 0.5,
+                  'bool': True,
+                  'datetime64': pd.Timestamp('20180310'),
+                  'timedelta[ns]': pd.Timedelta('1 days 06:05:01.000030'),
+                  'category': 'B'},
+            columns=['dtype name', 'dtype value'],
+            dtype=['object', 'int64', 'float64', 'bool', 'datetime64', 'timedelta[ns]', 'category'],
+            )
+
     def test_if_object_is_correctly_assigned_to_sqlite_dtypes(self):
-        pass
+        table_name = 'whatever'
+        assert create_table(df_dataset, table_name) == f'CREATE TABLE "{table_name}" ({final})'
 
     def test_if_int64_is_correctly_assigned_to_sqlite_dtypes(self):
         pass
