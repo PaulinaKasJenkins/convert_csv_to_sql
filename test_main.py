@@ -61,3 +61,10 @@ class Test_create_table:
         expected_final = '"object" TEXT, "int64" INTEGER, "float64" REAL, "bool" TEXT, "datetime64ns" TEXT, "timedelta64ns" TEXT'
 
         assert create_table(df_dataset, table_name) == f'CREATE TABLE "{table_name}" ({expected_final})'
+
+class Test_drop_table_if_exists:
+
+    @pytest.mark.parametrize("csv_file", ["abc.csv"])
+    def test_if_returned_value_is_correct(self, csv_file):
+        generated_table_name = get_table_name(csv_file) # func get_table_name(csv_file) has been already tested
+        assert drop_table_if_exists(generated_table_name) == f'DROP TABLE IF EXISTS {generated_table_name}'
