@@ -10,6 +10,10 @@ df_from_csv = pd.read_csv(csv_file, delimiter=';')
 
 
 def get_table_name():
+    '''
+    Create a table name from CSV file name and convert it to be table name
+    allowed by slite3 documentation.
+    '''
     regex = re.compile('[^a-zA-Z]')
     table_name = "student-mat.csv".split(".")[0]
     table_name = regex.sub('', table_name)
