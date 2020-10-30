@@ -3,8 +3,19 @@ import inspect
 
 from main import *
 
-class Test_create_table():
-    def test_
+class Test_get_table_name:
+
+    @pytest.mark.parametrize("csv_file", ["sqlite_.csv", "sqlite_aabbcc.csv"])
+    def test_if_name_starts_with_sqlite__is_not_allowed(self, csv_file):
+        '''
+        As we don't know what exactly get_table_name() will return because of
+        random module, we will check characteristics like len() and letters.
+        '''
+        assert len(get_table_name()) == 10 # length should be equal to 10
+
+        regex = re.compile('[^a-z]') # letters inside should be ascii lowercase
+        assert get_table_name() == regex.sub('', get_table_name())
+
 
 
 # class Test_drop_table_if_exists:
