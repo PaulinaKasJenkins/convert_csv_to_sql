@@ -44,37 +44,27 @@ class Test_create_table:
      - timedelta[ns]
     '''
 
-    # example dataset with dtypes that we want to test
-    df_dataset = pd.DataFrame(
-            data={'object': np.array(['foo'], dtype=object),
-                  'int64': np.array([1], dtype=int),
-                  'float64': np.array([0.5], dtype=float),
-                  'bool': np.array([True], dtype=bool),
-                  'datetime64[ns]': np.array([pd.Timestamp('20180310')], dtype=np.datetime64),
-                  'timedelta64[ns]': np.array([pd.Timedelta('1 days 06:05:01.000030')], dtype=np.timedelta64),
-                  },
-            index=[0],
-            )
+    def test_if_pandas_dtypes_are_correctly_assigned_to_sqlite_dtypes(self):
 
-
-    def test_if_object_is_correctly_assigned_to_sqlite_dtypes(self):
+        # example dataset with dtypes that we want to test
+        df_dataset = pd.DataFrame(
+                data={'object': np.array(['foo'], dtype=object),
+                      'int64': np.array([1], dtype=int),
+                      'float64': np.array([0.5], dtype=float),
+                      'bool': np.array([True], dtype=bool),
+                      'datetime64ns': np.array([pd.Timestamp('20180310')], dtype=np.datetime64),
+                      'timedelta64ns': np.array([pd.Timedelta('1 days 06:05:01.000030')], dtype=np.timedelta64),
+                      },
+                index=[0],
+                )
         table_name = 'whatever'
-        column_names = df_dataset.columns()
-        final = '"object" TEXT, "int64" INTEGER, "float64" REAL, ...'
+        expected_final = '"object" TEXT, "int64" INTEGER, "float64" REAL, "bool" TEXT, "datetime64ns" TEXT, "timedelta64ns" TEXT'
 
-        assert create_table(df_dataset, table_name) == f'CREATE TABLE "{table_name}" ({final})'
+        assert create_table(df_dataset, table_name) == f'CREATE TABLE "{table_name}" ({expected_final})'
 
-    def test_if_int64_is_correctly_assigned_to_sqlite_dtypes(self):
-        pass
+class Test_drop_table_if_exists:
 
-    def test_if_float64_is_correctly_assigned_to_sqlite_dtypes(self):
-        pass
-
-    def test_if_datetime64_is_correctly_assigned_to_sqlite_dtypes(self):
-        pass
-
-    def test_if_timedeltans_is_correctly_assigned_to_sqlite_dtypes(self):
-        pass
-
-    def test_if_category_is_correctly_assigned_to_sqlite_dtypes(self):
-        pass
+    def test_if_returned_value_is_correct(self):
+        csv_file = "abc.csv"
+        generated_table_name = get_table_name(csv_file) # func get_table_name(csv_file) has been already tested
+        assert drop_table_if_exists(generated_table_name) == f'DROP TABLE IF EXISTS {generated_table_name}'
