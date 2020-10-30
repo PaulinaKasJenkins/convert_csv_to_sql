@@ -30,3 +30,33 @@ class Test_get_table_name:
 
         regex = re.compile('[^a-z]') # letters inside should be ascii lowercase
         assert generated_table_name == regex.sub('', generated_table_name)
+
+class Test_create_table:
+    '''
+    Pandas possible dtypes:                 Sqlite3 possible dtypes:
+     - object                               - null
+     - int64                                - integer
+     - float64                              - real
+     - bool                                 - text
+     - datetime64                           - blob
+     - timedelta[ns]
+     - category
+    '''
+
+    def test_if_object_is_correctly_assigned_to_sqlite_dtypes(self):
+        pass
+
+    def test_if_int64_is_correctly_assigned_to_sqlite_dtypes(self):
+        pass
+
+    def test_if_float64_is_correctly_assigned_to_sqlite_dtypes(self):
+        pass
+
+    def test_if_datetime64_is_correctly_assigned_to_sqlite_dtypes(self):
+        pass
+
+    def test_if_timedeltans_is_correctly_assigned_to_sqlite_dtypes(self):
+        pass
+
+    def test_if_category_is_correctly_assigned_to_sqlite_dtypes(self):
+        pass
