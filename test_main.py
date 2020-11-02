@@ -87,3 +87,22 @@ class Test_insert_into_values:
         numb_of_columns = len(df_dataset.columns)
         values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
         assert insert_into_values(df_dataset, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
+
+
+class Test_fill_values_in:
+
+    def test_if_returned_value_is_correct(self):
+        csv_file = "abc.csv"
+        df_from_csv = pd.DataFrame(
+                data={'object': np.array(['foo'], dtype=object),
+                      'int64': np.array([1], dtype=int),
+                      'float64': np.array([0.5], dtype=float),
+                      'bool': np.array([True], dtype=bool),
+                      'datetime64ns': np.array([pd.Timestamp('20180310')], dtype=np.datetime64),
+                      'timedelta64ns': np.array([pd.Timedelta('1 days 06:05:01.000030')], dtype=np.timedelta64),
+                      },
+                index=[0],
+                )
+
+
+        assert fill_values_in() ==
