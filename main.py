@@ -85,6 +85,7 @@ def fill_values_in():
             tuple(lis))
             conn.commit()
 
-    print(pd.read_sql(f"select * from {generated_table_name}", con = conn))
+    read_from_sql = pd.read_sql(f"select * from {generated_table_name}", con = conn)
+    return read_from_sql
 
-fill_values_in()
+print(fill_values_in())
