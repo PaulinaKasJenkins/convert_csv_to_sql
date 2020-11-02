@@ -2,3 +2,4 @@ venv/
 .DS_Store
 students.sqlite
 .sqlite
+.coverage
