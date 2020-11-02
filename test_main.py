@@ -91,7 +91,8 @@ class Test_insert_into_values:
 
 class Test_fill_values_in:
 
-    def test_if_returned_value_is_correct(self):
+    @pytest.mark.parametrize("generated_table_name", [get_table_name(csv_file)])
+    def test_if_db_is_correctly_saved(self, generated_table_name):
         csv_file = "abc.csv"
         df_from_csv = pd.DataFrame(
                 data={'object': np.array(['foo'], dtype=object),
@@ -103,6 +104,7 @@ class Test_fill_values_in:
                       },
                 index=[0],
                 )
+        conn = sqlite3.connect(f'{generated_table_name}.sqlite')
+        cur = conn.cursor()
 
-
-        assert fill_values_in() ==
+        assert list(fill_values_in().columns) == ['object', 'int64', 'float64', 'bool', 'datetime64ns', 'timedelta64ns']
