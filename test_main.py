@@ -88,7 +88,7 @@ class Test_insert_into_values:
         values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
         assert insert_into_values(df_dataset, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
 
-
+@pytest.mark.skip
 class Test_fill_values_in:
 
     def test_if_returned_value_is_correct(self):
@@ -105,4 +105,4 @@ class Test_fill_values_in:
                 )
 
 
-        assert fill_values_in() ==
+        # assert fill_values_in() ==
