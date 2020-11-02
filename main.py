@@ -51,10 +51,12 @@ def drop_table_if_exists(table_name):
 
     return f'DROP TABLE IF EXISTS {table_name}'
 
+
 conn = sqlite3.connect(f'{generated_table_name}.sqlite')
 cur = conn.cursor()
 cur.execute(f"{drop_table_if_exists(generated_table_name)}")
 cur.execute(f"{create_table(df_from_csv, generated_table_name)}")
+
 
 def insert_into_values(df_dataset, table_name):
     '''
@@ -64,22 +66,25 @@ def insert_into_values(df_dataset, table_name):
     values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
     return f'INSERT INTO "{table_name}" VALUES ({values})'
 
-with open(csv_file) as csv_file_with_open:
-    csv_reader = csv.reader(csv_file_with_open, delimiter=';')
-    columns_number = [i for i in range(len(df_from_csv.columns))]
-    variables = [f'variable{i}' for i in columns_number]
+def fill_values_in():
+    with open(csv_file) as csv_file_with_open:
+        csv_reader = csv.reader(csv_file_with_open, delimiter=';')
+        columns_number = [i for i in range(len(df_from_csv.columns))]
+        variables = [f'variable{i}' for i in columns_number]
 
-    next(csv_reader) # to skip header
-    for row in csv_reader:
-        dic = dict(zip(variables, row))
+        next(csv_reader) # to skip header
+        for row in csv_reader:
+            dic = dict(zip(variables, row))
 
-        tup = ()
-        lis = list(tup)
-        for i in variables:
-            lis.append(dic[i])
+            tup = ()
+            lis = list(tup)
+            for i in variables:
+                lis.append(dic[i])
 
-        cur.execute(f"{insert_into_values(df_from_csv, generated_table_name)}",
-        tuple(lis))
-        conn.commit()
+            cur.execute(f"{insert_into_values(df_from_csv, generated_table_name)}",
+            tuple(lis))
+            conn.commit()
 
-# print(pd.read_sql(f"select * from {generated_table_name}", con = conn))
+    print(pd.read_sql(f"select * from {generated_table_name}", con = conn))
+
+fill_values_in()
