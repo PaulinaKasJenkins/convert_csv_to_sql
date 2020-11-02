@@ -68,3 +68,22 @@ class Test_drop_table_if_exists:
         csv_file = "abc.csv"
         generated_table_name = get_table_name(csv_file) # func get_table_name(csv_file) has been already tested
         assert drop_table_if_exists(generated_table_name) == f'DROP TABLE IF EXISTS {generated_table_name}'
+
+class Test_insert_into_values:
+
+    def test_if_returned_value_is_correct(self):
+        csv_file = "abc.csv"
+        generated_table_name = get_table_name(csv_file) # func get_table_name(csv_file) has been already tested
+        df_dataset = pd.DataFrame(
+                data={'object': np.array(['foo'], dtype=object),
+                      'int64': np.array([1], dtype=int),
+                      'float64': np.array([0.5], dtype=float),
+                      'bool': np.array([True], dtype=bool),
+                      'datetime64ns': np.array([pd.Timestamp('20180310')], dtype=np.datetime64),
+                      'timedelta64ns': np.array([pd.Timedelta('1 days 06:05:01.000030')], dtype=np.timedelta64),
+                      },
+                index=[0],
+                )
+        numb_of_columns = len(df_dataset.columns)
+        values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
+        assert insert_into_values(df_dataset, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
