@@ -57,6 +57,7 @@ cur = conn.cursor()
 cur.execute(f"{drop_table_if_exists(generated_table_name)}")
 cur.execute(f"{create_table(df_from_csv, generated_table_name)}")
 
+
 def insert_into_values(df_dataset, table_name):
     '''
     The function returns SQL statement "INSERT INTO" with needed table name and values.
@@ -84,6 +85,6 @@ def fill_values_in():
             tuple(lis))
             conn.commit()
 
-fill_values_in()
+    print(pd.read_sql(f"select * from {generated_table_name}", con = conn))
 
-print(pd.read_sql(f"select * from {generated_table_name}", con = conn))
+fill_values_in()
