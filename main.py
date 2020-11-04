@@ -81,8 +81,7 @@ def fill_values_in(csv_file, df_from_csv, table_name):
             for i in variables:
                 lis.append(dic[i])
 
-            cur.execute(f"{insert_into_values(df_from_csv, table_name)}",
-            tuple(lis))
+            cur.execute(f"{insert_into_values(df_from_csv, table_name)}", tuple(lis))
             conn.commit()
 
     read_from_sql = pd.read_sql(f"select * from {table_name}", con = conn)
