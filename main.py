@@ -68,17 +68,19 @@ def insert_into_values(df_dataset, table_name):
 
 
 
-
-def executemany():
-    with open(csv_file) as csv_file_with_open:
+def executemany(file, df, table_name):
+    with open(file) as csv_file_with_open:
         csv_reader = csv.reader(csv_file_with_open, delimiter=';')
-        li = df_from_csv.values.tolist()
+        li = df.values.tolist()
 
         next(csv_reader) # to skip header
-        cur.executemany(f"{insert_into_values(df_from_csv, generated_table_name)}", li)
+        cur.executemany(f"{insert_into_values(df, table_name)}", li)
         conn.commit()
 
-    read_from_sql = pd.read_sql(f"select * from {generated_table_name}", con = conn)
+    read_from_sql = pd.read_sql(f"select * from {table_name}", con = conn)
     return read_from_sql
 
-print(executemany())
+print(executemany(file=csv_file,
+                  df=df_from_csv,
+                  table_name=generated_table_name,
+                  ))
