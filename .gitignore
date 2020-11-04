@@ -3,3 +3,4 @@ venv/
 students.sqlite
 .sqlite
 .coverage
+htmlcov/
