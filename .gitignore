@@ -5,3 +5,4 @@ students.sqlite
 .coverage
 htmlcov/
 abc.csv
+abc.sqlite
