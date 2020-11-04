@@ -66,7 +66,7 @@ def insert_into_values(df_dataset, table_name):
     values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
     return f'INSERT INTO "{table_name}" VALUES ({values})'
 
-def fill_values_in():
+def fill_values_in(csv_file, df_from_csv, table_name):
     with open(csv_file) as csv_file_with_open:
         csv_reader = csv.reader(csv_file_with_open, delimiter=';')
         columns_number = [i for i in range(len(df_from_csv.columns))]
@@ -81,10 +81,13 @@ def fill_values_in():
             for i in variables:
                 lis.append(dic[i])
 
-            cur.execute(f"{insert_into_values(df_from_csv, generated_table_name)}", tuple(lis))
+            cur.execute(f"{insert_into_values(df_from_csv, table_name)}",
+            tuple(lis))
             conn.commit()
 
-    read_from_sql = pd.read_sql(f"select * from {generated_table_name}", con = conn)
+    read_from_sql = pd.read_sql(f"select * from {table_name}", con = conn)
     return read_from_sql
 
-print(fill_values_in())
+print(fill_values_in(csv_file = csv_file,
+                     df_from_csv = df_from_csv,
+                     table_name = generated_table_name))
