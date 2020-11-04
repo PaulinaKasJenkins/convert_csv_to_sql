@@ -88,12 +88,10 @@ class Test_insert_into_values:
         values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
         assert insert_into_values(df_dataset, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
 
-@pytest.mark.skip
-class Test_fill_values_in:
+class Test_executemany:
 
-    def test_if_returned_value_is_correct(self):
-        csv_file = "abc.csv"
-        df_from_csv = pd.DataFrame(
+    def test_if_db_is_correctly_saved(self):
+        df_from_csv_test = pd.DataFrame(
                 data={'object': np.array(['foo'], dtype=object),
                       'int64': np.array([1], dtype=int),
                       'float64': np.array([0.5], dtype=float),
@@ -103,6 +101,15 @@ class Test_fill_values_in:
                       },
                 index=[0],
                 )
+        df_from_csv_test.to_csv("abc.csv", index=False, sep=';')
+        csv_file_test = "abc.csv"
+        generated_table_name_test = get_table_name(csv_file_test) # func get_table_name(csv_file) has been already tested
 
+        conn = sqlite3.connect(f'{generated_table_name_test}.sqlite')
+        cur = conn.cursor()
+        cur.execute(f"{drop_table_if_exists(generated_table_name_test)}")
+        cur.execute(f"{create_table(df_from_csv_test, generated_table_name_test)}")
 
-        # assert fill_values_in() ==
+        assert list(executemany(file=csv_file_test,
+                                df=df_from_csv_test,
+                                table_name=generated_table_name_test).columns) == ['object', 'int64', 'float64', 'bool', 'datetime64ns', 'timedelta64ns']
