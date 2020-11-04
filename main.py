@@ -54,7 +54,7 @@ def drop_table_if_exists(table_name):
 
 conn = sqlite3.connect(f'{generated_table_name}.sqlite')
 cur = conn.cursor()
-cur.execute(f"{drop_table_if_exists(generated_table_name)}")
+#cur.execute(f"{drop_table_if_exists(generated_table_name)}")
 cur.execute(f"{create_table(df_from_csv, generated_table_name)}")
 
 
@@ -73,7 +73,7 @@ def executemany(file, df, table_name):
         csv_reader = csv.reader(csv_file_with_open, delimiter=';')
         li = df.values.tolist()
 
-        next(csv_reader) # to skip header
+        #next(csv_reader) # to skip header
         cur.executemany(f"{insert_into_values(df, table_name)}", li)
         conn.commit()
 
