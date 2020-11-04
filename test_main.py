@@ -2,6 +2,7 @@ import pytest
 import inspect
 import pandas as pd
 import numpy as np
+import os.path
 
 from main import *
 
@@ -107,6 +108,7 @@ class Test_executemany:
                       },
                 index=[0],
                 )
+
         df_from_csv_test.to_csv("abc.csv", index=False, sep=';')
         csv_file_test = "abc.csv"
         generated_table_name_test = get_table_name(csv_file_test) # func get_table_name(csv_file) has been already tested
@@ -116,6 +118,4 @@ class Test_executemany:
         cur.execute(f"{drop_table_if_exists(generated_table_name_test)}")
         cur.execute(f"{create_table(df_from_csv_test, generated_table_name_test)}")
 
-        assert list(executemany(file=csv_file_test,
-                                df=df_from_csv_test,
-                                table_name=generated_table_name_test).columns) == ['object', 'int64', 'float64', 'bool', 'datetime64ns', 'timedelta64ns']
+        assert list(executemany(file=csv_file_test, df=df_from_csv_test, table_name=generated_table_name_test).columns) == ['object', 'int64', 'float64', 'bool', 'datetime64ns', 'timedelta64ns']
