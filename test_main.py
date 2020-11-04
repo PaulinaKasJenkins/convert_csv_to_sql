@@ -5,6 +5,12 @@ import numpy as np
 
 from main import *
 
+'''
+Functional Database Testing
+https://www.guru99.com/data-testing.html
+https://speakerdeck.com/wpuclark/database-testing-with-pytest?slide=17
+'''
+
 class Test_get_table_name:
 
     # when in CSV file name there are letters too
