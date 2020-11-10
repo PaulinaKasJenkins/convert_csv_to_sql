@@ -96,17 +96,9 @@ class Test_insert_into_values:
         assert insert_into_values(df_dataset, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
 
 class Test_executemany:
-
-<<<<<<< HEAD
-class Test_fill_values_in:
-
-    @pytest.mark.parametrize('generated_table_name', [get_table_name(csv_file)])
-    def test_if_db_is_correctly_saved(self, generated_table_name):
-        df_from_csv = pd.DataFrame(
-=======
+    
     def test_if_db_is_correctly_saved(self):
         df_from_csv_test = pd.DataFrame(
->>>>>>> spike_executemany
                 data={'object': np.array(['foo'], dtype=object),
                       'int64': np.array([1], dtype=int),
                       'float64': np.array([0.5], dtype=float),
@@ -123,8 +115,6 @@ class Test_fill_values_in:
 
         conn = sqlite3.connect(f'{generated_table_name}.sqlite')
         cur = conn.cursor()
-
-        a = list(fill_values_in().columns)
 
         df_from_csv_test.to_csv("abc.csv", index=False, sep=';')
         csv_file_test = "abc.csv"
