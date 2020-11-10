@@ -85,14 +85,9 @@ def executemany(df_dataset, table_name):
         for i in df_dataset.select_dtypes(include=['datetime', 'timedelta']):
             df_dataset[i] = df_dataset[i].astype(str)
 
-        li = convert_to_str(df_dataset).values.tolist()
+        values = convert_to_str(df_dataset).values.tolist()
 
-        #next(csv_reader) # to skip header
-        cur.executemany(f"{insert_into_values(df_dataset, table_name)}", li)
+        cur.executemany(f"{insert_into_values(df_dataset, table_name)}", values)
         conn.commit()
 
-    read_from_sql = pd.read_sql(f"select * from {table_name}", con = conn)
-    return read_from_sql
-
-print(executemany(df_dataset=df_from_csv,
-                  table_name=generated_table_name))
+executemany(df_from_csv, generated_table_name)
