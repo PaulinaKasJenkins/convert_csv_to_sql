@@ -61,7 +61,7 @@ class Test_create_table:
     '''
 
     def test_if_pandas_dtypes_are_correctly_assigned_to_sqlite_dtypes(self, dataframe_to_test):
-        table_name = 'whatever'
+        table_name = 'abc'
         expected = '"object" TEXT, "int64" INTEGER, "float64" REAL, "bool" TEXT, "datetime64ns" TEXT, "timedelta64ns" TEXT'
 
         assert create_table(dataframe_to_test, table_name) == f'CREATE TABLE "{table_name}" ({expected})'
