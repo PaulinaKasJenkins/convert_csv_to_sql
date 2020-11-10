@@ -96,7 +96,7 @@ class Test_insert_into_values:
         assert insert_into_values(df_dataset, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
 
 class Test_executemany:
-    
+
     def test_if_db_is_correctly_saved(self):
         df_from_csv_test = pd.DataFrame(
                 data={'object': np.array(['foo'], dtype=object),
@@ -128,4 +128,4 @@ class Test_executemany:
         executemany(df_dataset=df_from_csv_test,
                     table_name=generated_table_name_test)
 
-        assert len(cur.execute(f'select * from {table_name}').fetchall()) == 1
+        assert len(cur.execute(f'select * from {generated_table_name_test}').fetchall()) == 1
