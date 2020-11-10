@@ -6,3 +6,5 @@ students.sqlite
 htmlcov/
 abc.csv
 abc.sqlite
+bb_test_main.py
+main_bb.py
