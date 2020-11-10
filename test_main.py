@@ -89,35 +89,8 @@ class Test_insert_into_values:
         values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
         assert insert_into_values(dataframe_to_test, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
 
-@pytest.mark.skip
+
 class Test_executemany:
-
-    def test_if_db_is_correctly_saved(self, dataframe_to_test):
-        dataframe_to_test.to_csv("abc.csv", index=False, sep=';')
-        csv_file = "abc.csv"
-        columns_number = len(df_from_csv.columns)
-        values = str(['?' for i in range(columns_number)]).replace("'", "").replace(']', '').replace('[', '')
-
-        conn = sqlite3.connect(f'{generated_table_name}.sqlite')
-        cur = conn.cursor()
-
-        dataframe_to_test.to_csv("abc.csv", index=False, sep=';')
-        csv_file_test = "abc.csv"
-        generated_table_name_test = get_table_name(csv_file_test) # func get_table_name(csv_file) has been already tested
-
-        conn = sqlite3.connect(f'{generated_table_name_test}.sqlite')
-        cur = conn.cursor()
-        cur.execute(f"{drop_table_if_exists(generated_table_name_test)}")
-        cur.execute(f"{create_table(dataframe_to_test, generated_table_name_test)}")
-
-        executemany(df_dataset=dataframe_to_test,
-                    table_name=generated_table_name_test)
-
-        numb_of_expected_rows = 1
-        assert len(cur.execute(f'select * from {generated_table_name_test}').fetchall()) == numb_of_expected_rows
-
-
-class Test_executemany_v2:
 
     def test_if_db_is_correctly_saved(self, dataframe_to_test):
         csv_file = "abc.csv"
