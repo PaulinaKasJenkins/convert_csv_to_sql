@@ -79,7 +79,6 @@ def executemany(df, table_name):
     read_from_sql = pd.read_sql(f"select * from {table_name}", con = conn)
     return read_from_sql
 
-print(executemany(file=csv_file,
-                  df=df_from_csv,
+print(executemany(df=df_from_csv,
                   table_name=generated_table_name,
                   ))
