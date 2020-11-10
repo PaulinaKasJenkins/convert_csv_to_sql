@@ -108,3 +108,19 @@ class Test_executemany:
 
         numb_of_expected_rows = 1
         assert len(cur.execute(f'select * from {generated_table_name}').fetchall()) == numb_of_expected_rows
+
+
+class Test_convert_to_str:
+
+    def test_if_dataframe_is_ok(self, dataframe_to_test):
+        dataframe_to_compare = pd.DataFrame(
+                data={'object': np.array(['foo'], dtype=object),
+                      'int64': np.array([1], dtype=int),
+                      'float64': np.array([0.5], dtype=float),
+                      'bool': np.array([True], dtype=bool),
+                      'datetime64ns': '2018-03-10',
+                      'timedelta64ns': '1 days 06:05:01.000030',
+                      },
+                index=[0],
+                )
+        pd.testing.assert_frame_equal(dataframe_to_compare, convert_to_str(dataframe_to_test))
