@@ -66,27 +66,33 @@ def insert_into_values(df_dataset, table_name):
     values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
     return f'INSERT INTO "{table_name}" VALUES ({values})'
 
-def fill_values_in(csv_file, df_from_csv, table_name):
-    with open(csv_file) as csv_file_with_open:
-        csv_reader = csv.reader(csv_file_with_open, delimiter=';')
-        columns_number = [i for i in range(len(df_from_csv.columns))]
-        variables = [f'variable{i}' for i in columns_number]
 
-        next(csv_reader) # to skip header
-        for row in csv_reader:
-            dic = dict(zip(variables, row))
+def convert_to_str(df_dataset):
+    '''
+    The function converts problematic dtypes to strings.
+    '''
+    for i in df_dataset.select_dtypes(include=['datetime', 'timedelta']):
+        df_dataset[i] = df_dataset[i].astype(str)
 
-            tup = ()
-            lis = list(tup)
-            for i in variables:
-                lis.append(dic[i])
+    return df_dataset
 
-            cur.execute(f"{insert_into_values(df_from_csv, table_name)}", tuple(lis))
-            conn.commit()
+
+def executemany(df_dataset, table_name):
+    with sqlite3.connect(f'{table_name}.sqlite'):
+        conn = sqlite3.connect(f'{table_name}.sqlite')
+        cur = conn.cursor()
+
+        for i in df_dataset.select_dtypes(include=['datetime', 'timedelta']):
+            df_dataset[i] = df_dataset[i].astype(str)
+
+        li = convert_to_str(df_dataset).values.tolist()
+
+        #next(csv_reader) # to skip header
+        cur.executemany(f"{insert_into_values(df_dataset, table_name)}", li)
+        conn.commit()
 
     read_from_sql = pd.read_sql(f"select * from {table_name}", con = conn)
     return read_from_sql
 
-print(fill_values_in(csv_file = csv_file,
-                     df_from_csv = df_from_csv,
-                     table_name = generated_table_name))
+print(executemany(df_dataset=df_from_csv,
+                  table_name=generated_table_name))

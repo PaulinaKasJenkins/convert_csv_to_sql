@@ -5,4 +5,10 @@ students.sqlite
 .coverage
 htmlcov/
 abc.csv
+<<<<<<< HEAD
 abc.sqlite
+=======
+abc.sqlite
+bb_test_main.py
+main_bb.py
+>>>>>>> tests

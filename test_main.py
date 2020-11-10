@@ -2,8 +2,15 @@ import pytest
 import inspect
 import pandas as pd
 import numpy as np
+import os.path
 
 from main import *
+
+'''
+Functional Database Testing
+https://www.guru99.com/data-testing.html
+https://speakerdeck.com/wpuclark/database-testing-with-pytest?slide=17
+'''
 
 class Test_get_table_name:
 
@@ -88,12 +95,18 @@ class Test_insert_into_values:
         values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
         assert insert_into_values(df_dataset, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
 
-@pytest.mark.skip
+class Test_executemany:
+
+<<<<<<< HEAD
 class Test_fill_values_in:
 
-    def test_if_returned_value_is_correct(self):
-        csv_file = "abc.csv"
+    @pytest.mark.parametrize('generated_table_name', [get_table_name(csv_file)])
+    def test_if_db_is_correctly_saved(self, generated_table_name):
         df_from_csv = pd.DataFrame(
+=======
+    def test_if_db_is_correctly_saved(self):
+        df_from_csv_test = pd.DataFrame(
+>>>>>>> spike_executemany
                 data={'object': np.array(['foo'], dtype=object),
                       'int64': np.array([1], dtype=int),
                       'float64': np.array([0.5], dtype=float),
@@ -103,6 +116,26 @@ class Test_fill_values_in:
                       },
                 index=[0],
                 )
+        df_from_csv.to_csv("abc.csv", index=False, sep=';')
+        csv_file = "abc.csv"
+        columns_number = len(df_from_csv.columns)
+        values = str(['?' for i in range(columns_number)]).replace("'", "").replace(']', '').replace('[', '')
 
+        conn = sqlite3.connect(f'{generated_table_name}.sqlite')
+        cur = conn.cursor()
 
-        # assert fill_values_in() ==
+        a = list(fill_values_in().columns)
+
+        df_from_csv_test.to_csv("abc.csv", index=False, sep=';')
+        csv_file_test = "abc.csv"
+        generated_table_name_test = get_table_name(csv_file_test) # func get_table_name(csv_file) has been already tested
+
+        conn = sqlite3.connect(f'{generated_table_name_test}.sqlite')
+        cur = conn.cursor()
+        cur.execute(f"{drop_table_if_exists(generated_table_name_test)}")
+        cur.execute(f"{create_table(df_from_csv_test, generated_table_name_test)}")
+
+        executemany(df_dataset=df_from_csv_test,
+                    table_name=generated_table_name_test)
+
+        assert len(cur.execute(f'select * from {table_name}').fetchall()) == 1
