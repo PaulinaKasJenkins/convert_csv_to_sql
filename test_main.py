@@ -71,7 +71,9 @@ class Test_drop_table_if_exists:
     def test_if_returned_value_is_correct(self):
         csv_file = "abc.csv"
         generated_table_name = get_table_name(csv_file) # func get_table_name(csv_file) has been already tested
-        assert drop_table_if_exists(generated_table_name) == f'DROP TABLE IF EXISTS {generated_table_name}'
+
+        expected = f'DROP TABLE IF EXISTS abc'
+        assert drop_table_if_exists(generated_table_name) == expected
 
 
 class Test_insert_into_values:
