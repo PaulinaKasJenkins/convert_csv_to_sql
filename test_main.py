@@ -104,7 +104,7 @@ class Test_executemany:
                       'float64': np.array([0.5], dtype=float),
                       'bool': np.array([True], dtype=bool),
                       'datetime64ns': np.array([pd.Timestamp('20180310')], dtype=np.datetime64),
-                      'timedelta64ns': np.array([pd.Timedelta('1 days 06:05:01.000030')], dtype=np.timedelta64),
+                      # 'timedelta64ns': np.array([pd.Timedelta('1 days 06:05:01.000030')], dtype=np.timedelta64),
                       },
                 index=[0],
                 )
@@ -118,4 +118,8 @@ class Test_executemany:
         cur.execute(f"{drop_table_if_exists(generated_table_name_test)}")
         cur.execute(f"{create_table(df_from_csv_test, generated_table_name_test)}")
 
-        assert list(executemany(file=csv_file_test, df=df_from_csv_test, table_name=generated_table_name_test).columns) == ['object', 'int64', 'float64', 'bool', 'datetime64ns', 'timedelta64ns']
+        executemany(df=df_from_csv_test,
+                    table_name=generated_table_name_test,
+                    )
+
+        assert len(cur.execute('select * from abc').fetchall()) == 1
