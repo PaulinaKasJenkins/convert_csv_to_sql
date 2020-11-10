@@ -66,19 +66,33 @@ def insert_into_values(df_dataset, table_name):
     values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
     return f'INSERT INTO "{table_name}" VALUES ({values})'
 
-def executemany(df, table_name):
+
+def convert_to_str(df_dataset):
+    '''
+    The function converts problematic dtypes to strings.
+    '''
+    for i in df_dataset.select_dtypes(include=['datetime', 'timedelta']):
+        df_dataset[i] = df_dataset[i].astype(str)
+
+    return df_dataset
+
+
+def executemany(df_dataset, table_name):
     with sqlite3.connect(f'{table_name}.sqlite'):
         conn = sqlite3.connect(f'{table_name}.sqlite')
         cur = conn.cursor()
-        li = df.values.tolist()
+
+        for i in df_dataset.select_dtypes(include=['datetime', 'timedelta']):
+            df_dataset[i] = df_dataset[i].astype(str)
+
+        li = convert_to_str(df_dataset).values.tolist()
 
         #next(csv_reader) # to skip header
-        cur.executemany(f"{insert_into_values(df, table_name)}", li)
+        cur.executemany(f"{insert_into_values(df_dataset, table_name)}", li)
         conn.commit()
 
     read_from_sql = pd.read_sql(f"select * from {table_name}", con = conn)
     return read_from_sql
 
-print(executemany(df=df_from_csv,
-                  table_name=generated_table_name,
-                  ))
+print(executemany(df_dataset=df_from_csv,
+                  table_name=generated_table_name))
