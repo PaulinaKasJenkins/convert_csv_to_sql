@@ -6,14 +6,6 @@ import os.path
 
 from main import *
 
-'''
-Functional Database Testing
-https://www.guru99.com/data-testing.html
-https://speakerdeck.com/wpuclark/database-testing-with-pytest?slide=17
-'''
-
-
-@pytest.fixture(scope="module")
 def dataframe_to_test():
     df_dataset = pd.DataFrame(
             data={'object': np.array(['foo'], dtype=object),
