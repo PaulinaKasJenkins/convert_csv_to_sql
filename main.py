@@ -66,11 +66,10 @@ def insert_into_values(df_dataset, table_name):
     values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
     return f'INSERT INTO "{table_name}" VALUES ({values})'
 
-
-
-def executemany(file, df, table_name):
-    with open(file) as csv_file_with_open:
-        csv_reader = csv.reader(csv_file_with_open, delimiter=';')
+def executemany(df, table_name):
+    with sqlite3.connect(f'{table_name}.sqlite'):
+        conn = sqlite3.connect(f'{table_name}.sqlite')
+        cur = conn.cursor()
         li = df.values.tolist()
 
         #next(csv_reader) # to skip header
