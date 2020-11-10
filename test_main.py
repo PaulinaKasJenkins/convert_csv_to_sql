@@ -6,6 +6,7 @@ import os.path
 
 from main import *
 
+@pytest.fixture(scope="module")
 def dataframe_to_test():
     df_dataset = pd.DataFrame(
             data={'object': np.array(['foo'], dtype=object),
@@ -72,14 +73,15 @@ class Test_drop_table_if_exists:
         generated_table_name = get_table_name(csv_file) # func get_table_name(csv_file) has been already tested
         assert drop_table_if_exists(generated_table_name) == f'DROP TABLE IF EXISTS {generated_table_name}'
 
+
 class Test_insert_into_values:
 
     def test_if_returned_value_is_correct(self, dataframe_to_test):
         csv_file = "abc.csv"
         generated_table_name = get_table_name(csv_file) # func get_table_name(csv_file) has been already tested
-        numb_of_columns = len(dataframe_to_test.columns)
-        values = str(['?' for i in range(numb_of_columns)]).replace("'", "").replace(']', '').replace('[', '')
-        assert insert_into_values(dataframe_to_test, generated_table_name) == f'INSERT INTO "{generated_table_name}" VALUES ({values})'
+
+        expected_outcome = f'INSERT INTO "abc" VALUES (?, ?, ?, ?, ?, ?)'
+        assert insert_into_values(dataframe_to_test, generated_table_name) == expected_outcome
 
 
 class Test_executemany:
