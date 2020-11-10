@@ -99,8 +99,7 @@ class Test_executemany:
         cur.execute(f"{drop_table_if_exists(generated_table_name)}")
         cur.execute(f"{create_table(dataframe_to_test, generated_table_name)}")
 
-        executemany(df_dataset=dataframe_to_test,
-                    table_name=generated_table_name)
+        executemany(dataframe_to_test, generated_table_name)
 
         expected = 1
         assert len(cur.execute(f'select * from {generated_table_name}').fetchall()) == expected
