@@ -28,8 +28,8 @@ class Test_get_table_name:
     def test_if_name_starts_with_not_allowed_chars_then_letters(self, csv_file):
         generated_table_name = get_table_name(csv_file)
 
-        expected_length = 3
-        assert len(generated_table_name) == expected_length
+        expected = 3
+        assert len(generated_table_name) == expected
 
         regex = re.compile('[^a-z]') # letters inside should be ascii lowercase
         assert generated_table_name == regex.sub('', generated_table_name)
@@ -43,8 +43,8 @@ class Test_get_table_name:
         '''
         generated_table_name = get_table_name(csv_file)
 
-        expected_length = 10
-        assert len(generated_table_name) == expected_length
+        expected = 10
+        assert len(generated_table_name) == expected
 
         regex = re.compile('[^a-z]') # letters inside should be ascii lowercase
         assert generated_table_name == regex.sub('', generated_table_name)
@@ -62,9 +62,9 @@ class Test_create_table:
 
     def test_if_pandas_dtypes_are_correctly_assigned_to_sqlite_dtypes(self, dataframe_to_test):
         table_name = 'whatever'
-        expected_final = '"object" TEXT, "int64" INTEGER, "float64" REAL, "bool" TEXT, "datetime64ns" TEXT, "timedelta64ns" TEXT'
+        expected = '"object" TEXT, "int64" INTEGER, "float64" REAL, "bool" TEXT, "datetime64ns" TEXT, "timedelta64ns" TEXT'
 
-        assert create_table(dataframe_to_test, table_name) == f'CREATE TABLE "{table_name}" ({expected_final})'
+        assert create_table(dataframe_to_test, table_name) == f'CREATE TABLE "{table_name}" ({expected})'
 
 class Test_drop_table_if_exists:
 
@@ -80,8 +80,8 @@ class Test_insert_into_values:
         csv_file = "abc.csv"
         generated_table_name = get_table_name(csv_file) # func get_table_name(csv_file) has been already tested
 
-        expected_outcome = f'INSERT INTO "abc" VALUES (?, ?, ?, ?, ?, ?)'
-        assert insert_into_values(dataframe_to_test, generated_table_name) == expected_outcome
+        expected = f'INSERT INTO "abc" VALUES (?, ?, ?, ?, ?, ?)'
+        assert insert_into_values(dataframe_to_test, generated_table_name) == expected
 
 
 class Test_executemany:
@@ -100,8 +100,8 @@ class Test_executemany:
         executemany(df_dataset=dataframe_to_test,
                     table_name=generated_table_name)
 
-        numb_of_expected_rows = 1
-        assert len(cur.execute(f'select * from {generated_table_name}').fetchall()) == numb_of_expected_rows
+        expected = 1
+        assert len(cur.execute(f'select * from {generated_table_name}').fetchall()) == expected
 
 
 class Test_convert_to_str:
