@@ -108,7 +108,7 @@ class Test_executemany:
 class Test_convert_to_str:
 
     def test_if_dataframe_is_ok(self, dataframe_to_test):
-        dataframe_to_compare = pd.DataFrame(
+        expected = pd.DataFrame(
                 data={'object': np.array(['foo'], dtype=object),
                       'int64': np.array([1], dtype=int),
                       'float64': np.array([0.5], dtype=float),
@@ -118,4 +118,4 @@ class Test_convert_to_str:
                       },
                 index=[0],
                 )
-        pd.testing.assert_frame_equal(dataframe_to_compare, convert_to_str(dataframe_to_test))
+        pd.testing.assert_frame_equal(expected, convert_to_str(dataframe_to_test))
