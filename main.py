@@ -82,12 +82,11 @@ def executemany(df_dataset, table_name):
         conn = sqlite3.connect(f'{table_name}.sqlite')
         cur = conn.cursor()
 
-        for i in df_dataset.select_dtypes(include=['datetime', 'timedelta']):
-            df_dataset[i] = df_dataset[i].astype(str)
-
         values = convert_to_str(df_dataset).values.tolist()
 
         cur.executemany(f"{insert_into_values(df_dataset, table_name)}", values)
         conn.commit()
+
+    return
 
 executemany(df_from_csv, generated_table_name)
