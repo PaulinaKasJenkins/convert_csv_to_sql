@@ -87,6 +87,4 @@ def executemany(df_dataset, table_name):
         cur.executemany(f"{insert_into_values(df_dataset, table_name)}", values)
         conn.commit()
 
-    return
-
 executemany(df_from_csv, generated_table_name)
