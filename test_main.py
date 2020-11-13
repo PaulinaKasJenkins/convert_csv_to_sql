@@ -49,6 +49,7 @@ class Test_get_table_name:
         regex = re.compile('[^a-z]') # letters inside should be ascii lowercase
         assert generated_table_name == regex.sub('', generated_table_name)
 
+
 class Test_create_table:
     '''
     Pandas possible dtypes:                 Sqlite3 possible dtypes:
