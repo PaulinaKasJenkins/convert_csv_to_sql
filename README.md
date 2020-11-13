@@ -3,6 +3,7 @@
 ## Table of contents:
 #### * General info
 #### * Technologies 
+#### * Tests
 #### * Setup
 #### * Status
 
@@ -37,6 +38,13 @@ The algorithm mainly needs only one thing - CSV dataset that will be put in func
 ## **Technologies**:
 * Python 3.8.1
 * Pandas 1.1.0
+* Pytest 6.1.1
+* [Coverage 5.3](https://coverage.readthedocs.io/en/latest/)
+
+## **General info**:
+The program (file main.py) has been tested using ```Pytest``` framework. I decided to use it because I wanted to get to know a new testing framework (previously I worked on ```unittest```). Coverage report I got shows 92%. 
+
+<img src="coverage_report.jpg" width="400" >
 
 ## **Setup**:
 
