@@ -9,7 +9,7 @@
 ## **General info**:
 
 ### 1. Motivation
-Since it's hard to find SQL dataset suitable for data analysis, I will convert CSV dataset to SQL one. It's worthy because operating on big datasets is much faster with SQL rather than CSV, especially, when you want to work only on the part of the dataset. Hence below algorithm certainly will be of service to me.
+Since it's hard to find SQL dataset suitable for data analysis, I created a program that converts CSV dataset to SQL one. It's worthy because operating on big datasets is much faster with SQL rather than CSV, especially, when you want to work only on the part of the dataset. Hence below algorithm certainly will be of service to me.
 
 The second reason for writing such algorith is a desire to play with a SQL dataset.
 
@@ -22,17 +22,14 @@ Important note:
 *The target attribute G3 has a strong correlation with attributes G2 and G1. This occurs because G3 is the final year grade (issued at the 3rd period), while G1 and G2 correspond to the 1st and 2nd period grades. It is more difficult to predict G3 without G2 and G1, but such prediction is much more useful (see paper source for more details).*
 
 ### 3. Basic algorithm explanation
-The algorithm mainly needs 2 things:
+The algorithm mainly needs only one thing - CSV dataset that will be put in functions below as an argument. Some of them returns SQL statements that are executed.
+* ```get_table_name(csv_file)``` <-- returns proper table name (or generate new one almost randomly) that is allowed by sqlite3 documentation. 
+* ```create_table(df_dataset, table_name)``` <-- creates column names with corresponsing data types and returns SQL statement, for example ```CREATE TABLE "students" ("school" TEXT, ...);```
+* ```drop_table_if_exists(table_name)``` <-- returns ```DROP TABLE IF EXISTS "students";```
+* ```insert_into_values(df_dataset, table_name)``` <-- returns ```INSERT INTO "students" VALUES (?,?,?, ...);```. Then question marks will be replaced by values in function ```executemany()```.
+* ```convert_to_str(df_dataset)``` <-- the function converts problematic pandas datatypes like datetime or timedelta to be interpreted by sqlite as strings.
+* ```executemany(df_dataset, table_name)``` <-- executes ```insert_into_values()``` function.
 
-* CSV dataset,
-* a name which we want to call the SQL table.
-
-Both of them will be put in functions below (csv dataset converted into pandas dataframe priorly).
-
-* ```create_table(df_dataset, table_name)``` <-- ```CREATE TABLE "students" ("school" TEXT, ...);```
-* ```drop_table_if_exists(table_name)``` <-- ```DROP TABLE IF EXISTS "students";```
-* ```insert_into_values(df_dataset, table_name)``` <-- ```INSERT INTO "students" VALUES (?,?,?, ...);```
-* ```select_all_from(table_name)``` <-- ```SELECT * FROM "students";```
 
 #### You can find more explanation in [my Kaggle's notebook](https://www.kaggle.com/paulinakas/convert-csv-to-sql). 
 
