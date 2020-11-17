@@ -6,3 +6,5 @@ students.sqlite
 htmlcov/
 abc.csv
 abc.sqlite
+
+test sentence to check if Jenkins will automate run tests
