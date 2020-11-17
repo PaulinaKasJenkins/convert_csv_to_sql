@@ -1,5 +1,7 @@
 # The CSV to SQLite converter
 
+<img src="image.png" width="600" >
+
 ## Table of contents:
 #### * General info
 #### * Technologies 
@@ -41,7 +43,7 @@ The algorithm mainly needs only one thing - CSV dataset that will be put in func
 * Pytest 6.1.1
 * [Coverage 5.3](https://coverage.readthedocs.io/en/latest/)
 
-## **General info**:
+## **Tests**:
 The program (file main.py) has been tested using ```Pytest``` framework. I decided to use it because I wanted to get to know a new testing framework (previously I worked on ```unittest```). Coverage report I got shows 92%. 
 
 <img src="coverage_report.jpg" width="400" >
